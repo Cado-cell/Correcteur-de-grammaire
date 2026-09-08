@@ -24,6 +24,109 @@ Rien ne sort de votre machine : le texte n'est envoyé qu'au serveur local.
 
 ---
 
+## Démarrage rapide, pas à pas
+
+Il y a **deux choses à lancer** : le serveur (dans un terminal, à laisser
+ouvert) puis l'extension (une seule fois, dans Chrome).
+
+### Étape 1 — récupérer le code
+
+```bash
+git clone https://github.com/Cado-cell/Correcteur-de-grammaire.git
+cd Correcteur-de-grammaire
+git checkout claude/grammalecte-chrome-extension-54b5i3
+cd grammalecte-chrome
+```
+
+### Étape 2 — préparer Python
+
+Vérifiez d'abord que Python est installé :
+
+```bash
+python3 --version          # Windows : python --version
+```
+
+Il faut la version 3.8 ou plus. Sinon, installez-le depuis
+[python.org](https://www.python.org/downloads/) (sous Windows, cochez
+« Add Python to PATH » pendant l'installation).
+
+Créez ensuite un environnement isolé pour ne rien installer sur tout le système :
+
+```bash
+# macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Windows (PowerShell)
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+Le nom `(.venv)` apparaît au début de la ligne de commande : c'est que
+l'environnement est actif.
+
+### Étape 3 — installer les dépendances
+
+```bash
+pip install -r requirements.txt
+```
+
+### Étape 4 — lancer le serveur
+
+```bash
+python server.py
+```
+
+Le premier lancement télécharge le moteur Grammalecte (une seule fois, comptez
+une à deux minutes). Attendez cette ligne :
+
+```
+Grammalecte est prêt.
+```
+
+**Laissez ce terminal ouvert.** Fermer la fenêtre arrête le serveur, et
+l'extension n'a alors plus rien à interroger. Pour l'arrêter volontairement :
+`Ctrl+C`.
+
+### Étape 5 — vérifier que le serveur répond
+
+Ouvrez <http://localhost:5001/> dans Chrome. Une page d'essai s'affiche : c'est
+le serveur qui l'envoie. Si vous voyez cette page, l'étape est réussie.
+
+### Étape 6 — installer l'extension dans Chrome
+
+1. ouvrez `chrome://extensions` (à taper dans la barre d'adresse) ;
+2. activez le **Mode développeur**, l'interrupteur en haut à droite ;
+3. cliquez sur **Charger l'extension non empaquetée** ;
+4. sélectionnez le dossier `grammalecte-chrome/extension` — le dossier
+   lui-même, pas un fichier à l'intérieur ;
+5. l'extension apparaît dans la liste. Cliquez sur l'icône en forme de pièce de
+   puzzle dans la barre d'outils, puis sur la punaise à côté de « Grammalecte »
+   pour garder son icône visible.
+
+### Étape 7 — essayer
+
+Retournez sur <http://localhost:5001/> et **rechargez la page** (F5) : les
+extensions ne s'installent pas dans les onglets déjà ouverts. Cliquez dans un
+des champs de la page, attendez une seconde : les fautes se soulignent en rouge
+ondulé. Survolez un mot souligné pour voir l'explication et les suggestions.
+
+Cliquez enfin sur l'icône de l'extension : la popup doit afficher « Serveur
+local connecté » et le nombre de fautes.
+
+Ça marche ? L'extension fonctionne maintenant sur **tous les sites** : messagerie,
+réseaux sociaux, formulaires…
+
+### Les fois suivantes
+
+Seules deux commandes sont nécessaires — l'extension, elle, reste installée :
+
+```bash
+cd Correcteur-de-grammaire/grammalecte-chrome
+source .venv/bin/activate      # Windows : .venv\Scripts\Activate.ps1
+python server.py
+```
+
 ## 1. Le serveur
 
 ### Prérequis
@@ -55,6 +158,10 @@ Grammalecte est prêt.
 ```
 
 Laissez ce terminal ouvert tant que vous utilisez l'extension.
+
+Une page d'essai est servie sur <http://localhost:5001/> : elle contient un
+`textarea` et une zone `contenteditable` remplis de fautes, pratique pour
+vérifier d'un coup d'œil que serveur et extension se parlent.
 
 Options :
 
@@ -132,6 +239,10 @@ curl http://localhost:5001/health
 
 C'est cet appel que fait la popup pour afficher « Serveur local connecté ».
 
+#### `GET /`
+
+La page d'essai décrite plus haut (`demo.html`).
+
 CORS est activé pour toutes les origines : sans cela, le navigateur refuserait
 la réponse du serveur.
 
@@ -174,6 +285,7 @@ La popup (clic sur l'icône) affiche :
 ```
 grammalecte-chrome/
 ├── server.py              serveur Flask + conversion des positions
+├── demo.html              page d'essai servie sur http://localhost:5001/
 ├── requirements.txt
 ├── tools/
 │   └── make_icons.py      régénère les icônes (python tools/make_icons.py)

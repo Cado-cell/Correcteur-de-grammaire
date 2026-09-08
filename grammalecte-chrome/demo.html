@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page d'essai — Grammalecte</title>
+    <style>
+      :root { color-scheme: light; }
+      body {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 32px 20px 64px;
+        font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #0f172a;
+        background: #f8fafc;
+      }
+      h1 { font-size: 22px; margin: 0 0 4px; }
+      p.lead { margin: 0 0 24px; color: #475569; }
+      .step {
+        margin: 0 0 24px;
+        padding: 14px 16px;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #2563eb;
+        border-radius: 8px;
+        background: #fff;
+      }
+      .step b { color: #1d4ed8; }
+      label { display: block; margin: 24px 0 6px; font-weight: 600; }
+      textarea, .editable {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #fff;
+        font: 16px/1.7 Georgia, "Times New Roman", serif;
+        color: #0f172a;
+      }
+      textarea { height: 140px; resize: vertical; }
+      .editable { min-height: 110px; }
+      .hint { margin-top: 6px; font-size: 13px; color: #64748b; }
+      footer {
+        margin-top: 40px;
+        padding-top: 16px;
+        border-top: 1px solid #e2e8f0;
+        font-size: 13px;
+        color: #64748b;
+      }
+      code {
+        padding: 1px 5px;
+        border-radius: 4px;
+        background: #eef2ff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Page d'essai — Grammalecte</h1>
+    <p class="lead">Le serveur local fonctionne : c'est lui qui affiche cette page.</p>
+
+    <div class="step">
+      <b>Comment vérifier que l'extension marche :</b> cliquez dans un des deux champs
+      ci-dessous, puis attendez une seconde. Les fautes doivent se souligner en rouge
+      ondulé. Survolez un mot souligné avec la souris pour voir l'explication.
+    </div>
+
+    <label for="essai-textarea">Un champ de saisie classique (<code>&lt;textarea&gt;</code>)</label>
+    <textarea id="essai-textarea">Coucou, je veut du chocolat !
+Les chien sont gentils.
+Il a manger une pomme hier soir.</textarea>
+    <p class="hint">Modifiez le texte : la correction se relance 800 ms après la dernière frappe.</p>
+
+    <label for="essai-editable">Une zone de texte enrichi (<code>contenteditable</code>, comme dans une messagerie)</label>
+    <div class="editable" id="essai-editable" contenteditable="true">
+      <div>Bonjour, je vous envois ce message.</div>
+      <div>Les enfant sont partis a l'école.</div>
+    </div>
+    <p class="hint">Le texte de la page n'est jamais modifié : les soulignements sont dessinés par-dessus.</p>
+
+    <footer>
+      <p><b>Rien ne se souligne ?</b></p>
+      <ul>
+        <li>Vérifiez que l'extension est bien chargée dans <code>chrome://extensions</code>.</li>
+        <li>Rechargez cette page (F5) : l'extension ne s'installe pas dans les onglets déjà ouverts.</li>
+        <li>Cliquez sur l'icône de l'extension : elle doit indiquer « Serveur local connecté ».</li>
+      </ul>
+    </footer>
+  </body>
+</html>

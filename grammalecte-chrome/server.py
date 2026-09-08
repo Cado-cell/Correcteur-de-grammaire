@@ -21,6 +21,7 @@ import logging
 import threading
 import time
 from collections import OrderedDict
+from pathlib import Path
 from typing import Any, Dict, List
 
 from flask import Flask, jsonify, request
@@ -154,6 +155,15 @@ def _add_private_network_header(response):
     return response
 
 
+@app.get("/")
+def demo():
+    """Page d'essai, pratique pour vérifier que serveur et extension se parlent."""
+    page = Path(__file__).resolve().parent / "demo.html"
+    if not page.exists():
+        return "Serveur Grammalecte en marche. Envoyez du texte sur POST /check.", 200
+    return page.read_text(encoding="utf-8"), 200, {"Content-Type": "text/html; charset=utf-8"}
+
+
 @app.get("/health")
 def health():
     """Vérification de disponibilité, utilisée par la popup de l'extension."""
@@ -231,7 +241,9 @@ def main() -> None:
     if not args.no_warm_up:
         threading.Thread(target=warm_up, name="warm-up", daemon=True).start()
 
-    LOGGER.info("Serveur Grammalecte sur http://%s:%d (POST /check)", args.host, args.port)
+    display_host = "localhost" if args.host in ("127.0.0.1", "0.0.0.0") else args.host
+    LOGGER.info("Serveur Grammalecte sur http://%s:%d", display_host, args.port)
+    LOGGER.info("Page d'essai : http://%s:%d/", display_host, args.port)
     app.run(host=args.host, port=args.port, debug=args.debug, threaded=True)
 
 
