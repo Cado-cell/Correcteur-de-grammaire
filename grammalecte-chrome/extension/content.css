@@ -1,0 +1,144 @@
+/* ==========================================================================
+ * Grammalecte Chrome — styles injectés dans les pages visitées.
+ *
+ * Tout est préfixé « glc- » et marqué « !important » : ces éléments vivent
+ * dans le DOM de la page hôte, dont les feuilles de style pourraient sinon
+ * les déformer.
+ * ========================================================================== */
+
+.glc-root {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  z-index: 2147483647 !important;
+  pointer-events: none !important;
+  color-scheme: light !important;
+}
+
+/* Calque superposé à un champ de saisie ; il ne capte jamais la souris,
+   les clics et la sélection continuent d'atteindre le champ. */
+.glc-layer {
+  position: fixed !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  contain: strict !important;
+}
+
+/* Copie invisible du contenu d'un <textarea> : mêmes police, marges et
+   retours à la ligne, texte transparent. Seuls les soulignements se voient. */
+.glc-mirror {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  color: transparent !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  border-style: solid !important;
+  border-color: transparent !important;
+}
+
+/* Le mot fautif : soulignement rouge ondulé. */
+.glc-mark {
+  color: transparent !important;
+  background: transparent !important;
+  text-decoration-line: underline !important;
+  text-decoration-style: wavy !important;
+  text-decoration-color: #d92d20 !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 2px !important;
+  text-decoration-skip-ink: none !important;
+  -webkit-text-decoration-line: underline !important;
+  -webkit-text-decoration-style: wavy !important;
+  -webkit-text-decoration-color: #d92d20 !important;
+}
+
+.glc-mark.glc-mark-active {
+  background: rgba(217, 45, 32, 0.12) !important;
+  border-radius: 2px !important;
+}
+
+/* Équivalent pour les zones « contenteditable » : on ne peut pas recopier
+   leur mise en page, on dessine donc l'ondulation sous chaque rectangle
+   occupé par le mot. */
+.glc-underline {
+  position: absolute !important;
+  display: block !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+}
+
+.glc-underline path {
+  fill: none !important;
+  stroke: #d92d20 !important;
+  stroke-width: 1.1px !important;
+  stroke-linecap: round !important;
+}
+
+/* Infobulle affichée au survol d'un mot souligné. */
+.glc-tooltip {
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  max-width: 320px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 8px 10px !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.18) !important;
+  font: 400 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  color: #0f172a !important;
+  text-align: left !important;
+  pointer-events: none !important;
+  opacity: 1 !important;
+}
+
+.glc-tooltip[hidden] {
+  display: none !important;
+}
+
+.glc-tooltip-word {
+  display: block !important;
+  margin: 0 0 2px 0 !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  color: #d92d20 !important;
+}
+
+.glc-tooltip-message {
+  display: block !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  color: #0f172a !important;
+}
+
+.glc-tooltip-suggestions {
+  display: block !important;
+  margin: 6px 0 0 0 !important;
+  padding-top: 6px !important;
+  border-top: 1px solid rgba(15, 23, 42, 0.1) !important;
+  font-size: 12px !important;
+  color: #475569 !important;
+}
+
+.glc-tooltip-suggestion {
+  display: inline-block !important;
+  margin: 2px 4px 0 0 !important;
+  padding: 1px 6px !important;
+  border-radius: 4px !important;
+  background: #eef2ff !important;
+  color: #1e3a8a !important;
+  font-weight: 600 !important;
+}

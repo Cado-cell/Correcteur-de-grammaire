@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Grammalecte</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1 class="title">Grammalecte</h1>
+      <label class="toggle">
+        <input type="checkbox" id="enabled" />
+        <span>Actif</span>
+      </label>
+    </header>
+
+    <section class="count-card" id="count-card">
+      <span class="count" id="count">0</span>
+      <span class="count-label" id="count-label">faute détectée sur cette page</span>
+    </section>
+
+    <p class="server" id="server">Vérification du serveur…</p>
+
+    <ul class="errors" id="errors"></ul>
+    <p class="empty" id="empty" hidden>
+      Aucune faute pour l'instant. Écrivez dans un champ de saisie de la page ; la
+      correction se déclenche 800 ms après la dernière frappe.
+    </p>
+
+    <footer class="footer">
+      <label class="field">
+        Serveur
+        <input id="server-url" type="url" spellcheck="false" placeholder="http://localhost:5001" />
+      </label>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
