@@ -109,7 +109,13 @@
       rootElement.style.zIndex = "2147483647";
     }
     if (!rootElement.isConnected) {
-      (document.body || document.documentElement).appendChild(rootElement);
+      // Jamais dans le <body> quand celui-ci est lui-même modifiable (cadre
+      // d'éditeur) : le calque ferait alors partie du texte de l'utilisateur.
+      const parent =
+        document.body && !document.body.isContentEditable
+          ? document.body
+          : document.documentElement;
+      parent.appendChild(rootElement);
     }
     return rootElement;
   }
@@ -225,6 +231,9 @@
         if (node.nodeType === Node.ELEMENT_NODE) {
           const tag = node.tagName;
           if (tag === "SCRIPT" || tag === "STYLE" || tag === "NOSCRIPT" || tag === "TEMPLATE") {
+            return NodeFilter.FILTER_REJECT;
+          }
+          if (node.classList && node.classList.contains("glc-root")) {
             return NodeFilter.FILTER_REJECT;
           }
         }
@@ -547,8 +556,27 @@
       return textarea.disabled || textarea.readOnly ? null : textarea;
     }
 
-    const editable = element.closest(EDITABLE_SELECTOR);
-    if (editable && editable.isContentEditable) return editable;
+    // Cas courant : un ancêtre porte l'attribut contenteditable.
+    const declared = element.closest(EDITABLE_SELECTOR);
+    if (declared && declared.isContentEditable) return declared;
+
+    // Beaucoup d'éditeurs de messagerie (TinyMCE et ses dérivés, dont celui
+    // de HubSpot) rendent tout un cadre modifiable via document.designMode,
+    // ou en posant la propriété contentEditable sans attribut : aucun sélecteur
+    // ne les trouve, seul isContentEditable les signale. On remonte alors
+    // jusqu'à la racine de la zone modifiable, sans dépasser <body>.
+    if (element.isContentEditable) {
+      const documentElement = element.ownerDocument.documentElement;
+      let host = element;
+      while (
+        host.parentElement &&
+        host.parentElement !== documentElement &&
+        host.parentElement.isContentEditable
+      ) {
+        host = host.parentElement;
+      }
+      return host;
+    }
     return null;
   }
 
@@ -639,9 +667,18 @@
    * Écoute des évènements
    * ------------------------------------------------------------------- */
 
+  /** Cible réelle : event.target est masqué par l'hôte d'un Shadow DOM. */
+  function eventTarget(event) {
+    if (typeof event.composedPath === "function") {
+      const path = event.composedPath();
+      if (path && path.length) return path[0];
+    }
+    return event.target;
+  }
+
   function onInput(event) {
     if (!enabled) return;
-    const element = editableHost(event.target);
+    const element = editableHost(eventTarget(event));
     if (!element) return;
     hideTooltip();
     checkerFor(element).schedule();
@@ -649,7 +686,7 @@
 
   function onFocusIn(event) {
     if (!enabled) return;
-    const element = editableHost(event.target);
+    const element = editableHost(eventTarget(event));
     if (!element) return;
     checkerFor(element).schedule();
   }
@@ -695,8 +732,16 @@
    * Réglages
    * ------------------------------------------------------------------- */
 
+  function deepActiveElement() {
+    let active = document.activeElement;
+    while (active && active.shadowRoot && active.shadowRoot.activeElement) {
+      active = active.shadowRoot.activeElement;
+    }
+    return active;
+  }
+
   function scheduleActiveElement() {
-    const element = editableHost(document.activeElement);
+    const element = editableHost(deepActiveElement());
     if (element) checkerFor(element).schedule();
   }
 
